@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Tienda online de EMAIAP — Empresa Municipal Agroindustrial Aguada de Pasajeros. Productos cárnicos, lácteos, dulces, conservas y agropecuarios. Pide por WhatsApp." />
-  <meta name="theme-color" content="#1a3c34" />
   <title>EMAIAP — Tienda Online | Aguada de Pasajeros</title>
 
-  <!-- Tipografía: Fraunces (titulares serif estilo editorial) + Quicksand (cuerpo, redondeada).
-       Opcional: si no hay conexión, el sitio funciona con fuentes del sistema (Georgia/sans). -->
+  <!-- Tipografías de marca: Archivo (sans) para texto, Fraunces (serif) para titulares -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,600;1,9..144,700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -19,38 +17,28 @@
 <body>
 
   <!-- ============================ -->
-  <!-- BARRA SUPERIOR               -->
-  <!-- ============================ -->
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <span class="topbar-item">📍 Aguada de Pasajeros · Cienfuegos</span>
-      <span class="topbar-item topbar-item--right">🚚 Pedidos por WhatsApp · Entregas en el municipio</span>
-    </div>
-  </div>
-
-  <!-- ============================ -->
   <!-- CABECERA                     -->
   <!-- ============================ -->
-  <header class="site-header" id="siteHeader">
+  <header class="site-header">
     <div class="container header-inner">
-      <a href="#inicio" class="brand" aria-label="EMAIAP — Inicio">
+      <a href="#" class="brand" aria-label="Inicio">
         <img src="assets/logo.png" alt="Logo de EMAIAP" class="brand-logo" />
-        <span class="brand-text">
-          <span class="brand-name">EMAIAP</span>
-          <span class="brand-sub">Aguada de Pasajeros</span>
-        </span>
+        <span class="brand-name">EMAIAP</span>
       </a>
 
-      <nav class="nav-links" aria-label="Secciones">
-        <a href="#inicio">Inicio</a>
-        <a href="#catalog">Catálogo</a>
+      <!-- Navegación de categorías (se rellena dinámicamente) -->
+      <nav class="nav-categories" id="navCategories" aria-label="Categorías">
+        <!-- JS inyecta aquí los enlaces de categoría -->
       </nav>
 
-      <!-- Botón del carrito estilo "Mi pedido" -->
-      <button class="cart-toggle" id="cartToggle" aria-label="Abrir mi pedido">
-        <span class="cart-toggle-emoji" aria-hidden="true">🧺</span>
-        <span class="cart-toggle-label">Mi pedido</span>
-        <span class="cart-count" id="cartCount" aria-live="polite" data-count="0">0</span>
+      <!-- Botón del carrito -->
+      <button class="cart-toggle" id="cartToggle" aria-label="Abrir carrito">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount" aria-live="polite">0</span>
       </button>
     </div>
   </header>
@@ -58,107 +46,98 @@
   <!-- ============================ -->
   <!-- CONTENIDO PRINCIPAL          -->
   <!-- ============================ -->
-  <main class="page-main">
+  <main class="container main-content">
 
-    <!-- HERO editorial con collage de stickers y sello giratorio -->
-    <section class="hero" id="inicio">
-      <div class="container hero-inner">
-        <div class="hero-content">
-          <span class="hero-badge">🌿 Aguada de Pasajeros · Cienfuegos</span>
-          <h1 class="hero-title">
-            Del campo de Aguada
-            <em class="hero-accent">a tu mesa</em>,
-            sin intermediarios.
-          </h1>
-          <p class="hero-text">
-            Cárnicos, lácteos, dulces y productos agropecuarios de la Empresa
-            Municipal Agroindustrial. Añade al carrito y pide en segundos 🎉
-          </p>
-          <div class="hero-actions">
-            <a href="#catalog" class="btn btn-terracotta btn-lg">
-              Ver catálogo <span class="btn-arrow" aria-hidden="true">↓</span>
-            </a>
-            <button type="button" class="btn btn-outline-dark btn-lg" id="heroOrderBtn">
-              📲 Hacer pedido
-            </button>
+    <!-- Hero / intro -->
+    <section class="hero">
+      <h1>Empresa Municipal Agroindustrial Aguada de Pasajeros</h1>
+      <p>Explora nuestra oferta de productos cárnicos, lácteos, dulces, conservas y agropecuarios, añádelos al carrito y finaliza tu pedido por WhatsApp en segundos.</p>
+    </section>
+
+    <!-- Contenedor de categorías y productos (lo rellena products.js) -->
+    <div id="catalog" class="catalog">
+      <!-- Mientras carga mostramos un mensaje -->
+      <p class="loading-msg" id="loadingMsg">Cargando productos…</p>
+    </div>
+
+    <!-- Mensaje de error amigable si ni el JSON ni el respaldo cargan -->
+    <div id="errorBox" class="error-box" hidden>
+      <strong>No pudimos cargar los productos.</strong>
+      <p>Verifica que existan los archivos data/products.json y data/products.js, y vuelve a intentarlo. Si el problema persiste, contacta al administrador del sitio.</p>
+    </div>
+
+    <!-- ============================ -->
+    <!-- CONTACTO Y PAGOS             -->
+    <!-- ============================ -->
+    <section class="contacto" id="contacto">
+      <div class="container">
+        <div class="cabecera-seccion">
+          <div>
+            <div class="sub-titulo">Visítenos o llámenos</div>
+            <h2 class="titulo-seccion">Contacto y pagos</h2>
           </div>
         </div>
 
-        <!-- Collage ilustrado (no necesita imágenes externas) -->
-        <div class="hero-art" aria-hidden="true">
-          <span class="sticker st-1">🥩</span>
-          <span class="sticker st-2">🧀</span>
-          <span class="sticker st-3">🍌</span>
-          <span class="sticker st-4">🍗</span>
-          <span class="sticker st-5">🍍</span>
-          <span class="sticker st-6">🥛</span>
+        <div class="contacto-grid">
+          <!-- Columna izquierda: datos de contacto -->
+          <div class="contacto-lista">
+            <div class="contacto-item">
+              <span class="ico" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <div>
+                <strong>Dirección</strong>
+                <p>Calle 2da entre 1ra y 3ra, No. 57, Perseverancia, Aguada de Pasajeros</p>
+              </div>
+            </div>
 
-          <!-- Sello circular giratorio -->
-          <span class="stamp">
-            <svg viewBox="0 0 120 120" class="stamp-svg">
-              <defs>
-                <path id="stampCircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
-              </defs>
-              <text class="stamp-text">
-                <textPath href="#stampCircle" xlink:href="#stampCircle">EMAIAP • CALIDAD SUPERIOR • </textPath>
-              </text>
-              <text x="60" y="72" text-anchor="middle" class="stamp-emoji">🌱</text>
-            </svg>
-          </span>
+            <div class="contacto-item">
+              <span class="ico" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <div>
+                <strong>Teléfonos fijos</strong>
+                <p>43569143 · 43569137</p>
+              </div>
+            </div>
+
+            <div class="contacto-item">
+              <span class="ico" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+              </span>
+              <div>
+                <strong>Móviles</strong>
+                <p>52098083 · 52117036</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha: bloque de pagos -->
+          <div class="bloque-pagos">
+            <h3>Pague por transferencia</h3>
+            <p>Puede abonar sus pedidos a cualquiera de nuestras tarjetas bancarias:</p>
+
+            <div class="tarjeta-banco">
+              <span class="tarjeta-moneda">CUP</span>
+              <span class="tarjeta-num">1245-4210-9542-0014</span>
+              <button type="button" class="btn-copiar" data-copy="1245-4210-9542-0014" aria-label="Copiar número de tarjeta CUP">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+
+            <div class="tarjeta-banco">
+              <span class="tarjeta-moneda">USD</span>
+              <span class="tarjeta-num">1245-4070-7542-0035</span>
+              <button type="button" class="btn-copiar" data-copy="1245-4070-7542-0035" aria-label="Copiar número de tarjeta USD">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+
+            <p class="pagos-nota">Copie el número con un clic y realice la transferencia desde Transfermóvil o EnZona.</p>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- MARQUESINA infinita -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track">
-        <span class="marquee-group">
-          <span>🥩 Calidad garantizada</span><i>✦</i>
-          <span>🌱 Producción local</span><i>✦</i>
-          <span>🚚 Pedidos por WhatsApp</span><i>✦</i>
-          <span>💰 Precios en CUP</span><i>✦</i>
-          <span>🌽 Del campo a tu mesa</span><i>✦</i>
-          <span>⭐ Atención al cliente</span><i>✦</i>
-        </span>
-        <span class="marquee-group">
-          <span>🥩 Calidad garantizada</span><i>✦</i>
-          <span>🌱 Producción local</span><i>✦</i>
-          <span>🚚 Pedidos por WhatsApp</span><i>✦</i>
-          <span>💰 Precios en CUP</span><i>✦</i>
-          <span>🌽 Del campo a tu mesa</span><i>✦</i>
-          <span>⭐ Atención al cliente</span><i>✦</i>
-        </span>
-      </div>
-    </div>
-
-    <div class="container page-content">
-
-      <!-- Encabezado del catálogo -->
-      <div class="catalog-head" id="catalog">
-        <p class="eyebrow"><span class="eyebrow-line"></span> Catálogo</p>
-        <h2 class="catalog-title">De nuestras tierras, <em class="accent">fresquito</em> al punto de venta.</h2>
-        <p class="catalog-sub">74 productos en 5 categorías. Elige, añade al carrito y envía tu pedido por WhatsApp.</p>
-      </div>
-
-      <!-- Chips de categorías (sticky, rellenos por products.js) -->
-      <nav class="chips" id="categoryChips" aria-label="Categorías"></nav>
-
-      <!-- Contenedor de categorías y productos (lo rellena products.js) -->
-      <div id="catalog-list" class="catalog">
-        <p class="loading-msg" id="loadingMsg">
-          <span class="loading-emoji" style="animation-delay:0s">🥩</span>
-          <span class="loading-emoji" style="animation-delay:.15s">🥦</span>
-          <span class="loading-emoji" style="animation-delay:.3s">🧀</span>
-          <span class="loading-text">Cargando productos…</span>
-        </p>
-      </div>
-
-      <!-- Mensaje de error amigable si ni el JSON ni el respaldo cargan -->
-      <div id="errorBox" class="error-box" hidden>
-        <strong>¡Ups! 😅 No pudimos cargar los productos.</strong>
-        <p>Verifica que existan los archivos data/products.json y data/products.js, y vuelve a intentarlo. Si el problema persiste, contacta al administrador del sitio.</p>
-      </div>
-    </div>
   </main>
 
   <!-- ============================ -->
@@ -167,17 +146,13 @@
   <div class="cart-overlay" id="cartOverlay" hidden></div>
   <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras" aria-hidden="true">
     <div class="cart-header">
-      <h2>🧺 Tu pedido</h2>
+      <h2>Tu carrito</h2>
       <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">&times;</button>
     </div>
 
     <div class="cart-body" id="cartBody">
       <!-- JS inyecta aquí los items del carrito -->
-      <p class="cart-empty" id="cartEmpty">
-        <span class="cart-empty-emoji">🧺</span>
-        ¡Tu carrito está vacío!
-        <small>Añade algo rico 😋</small>
-      </p>
+      <p class="cart-empty" id="cartEmpty">Tu carrito está vacío.</p>
     </div>
 
     <div class="cart-footer">
@@ -185,7 +160,7 @@
         <span>Total:</span>
         <strong id="cartTotal">$0.00</strong>
       </div>
-      <button class="btn btn-terracotta btn-block btn-lg" id="checkoutBtn" disabled>⚡ Finalizar compra</button>
+      <button class="btn btn-primary btn-block" id="checkoutBtn" disabled>Finalizar compra</button>
     </div>
   </aside>
 
@@ -195,7 +170,7 @@
   <div class="modal-overlay" id="checkoutOverlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
       <div class="modal-header">
-        <h2 id="checkoutTitle">⚡ Finalizar compra</h2>
+        <h2 id="checkoutTitle">Finalizar compra</h2>
         <button class="modal-close" id="checkoutClose" aria-label="Cerrar">&times;</button>
       </div>
 
@@ -208,32 +183,28 @@
         <form id="checkoutForm" class="checkout-form" novalidate>
           <!-- Nombre opcional -->
           <div class="form-group">
-            <label for="customerName">👤 Nombre (opcional)</label>
+            <label for="customerName">Nombre (opcional)</label>
             <input type="text" id="customerName" name="customerName" placeholder="Ej. María Pérez" autocomplete="name" />
           </div>
 
           <!-- Método de pago -->
           <div class="form-group">
-            <span class="form-label">💰 Método de pago</span>
+            <span class="form-label">Método de pago</span>
             <div class="payment-options" id="paymentOptions">
               <label class="payment-option">
                 <input type="radio" name="payment" value="Transfermóvil" required />
-                <span class="pay-emoji">📲</span>
                 <span>Transfermóvil</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="Zelle" />
-                <span class="pay-emoji">💸</span>
                 <span>Zelle</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="PayPal" />
-                <span class="pay-emoji">💳</span>
                 <span>PayPal</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="Pago en efectivo" />
-                <span class="pay-emoji">🤝</span>
                 <span>Pago en efectivo</span>
               </label>
             </div>
@@ -247,7 +218,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-ghost" id="checkoutCancel">Cancelar</button>
-        <button class="btn btn-terracotta" id="confirmOrderBtn">📲 Confirmar y enviar por WhatsApp</button>
+        <button class="btn btn-danger" id="confirmOrderBtn">Confirmar y enviar por WhatsApp</button>
       </div>
     </div>
   </div>
@@ -260,12 +231,12 @@
       <div class="confirm-logo">
         <img src="assets/logo.png" alt="Logo de EMAIAP" />
       </div>
-      <h2 id="confirmTitle">🎉 ¡Pedido enviado!</h2>
+      <h2 id="confirmTitle">¡Pedido enviado!</h2>
       <p class="confirm-text">
-        ¡Gracias por tu compra! Te hemos redirigido a WhatsApp con el detalle de tu pedido.
+        Gracias por tu compra. Te hemos redirigido a WhatsApp con el detalle de tu pedido.
         Si WhatsApp no se abrió automáticamente, revisa que no esté bloqueado el enlace.
       </p>
-      <button class="btn btn-primary btn-block" id="confirmCloseBtn">😄 Seguir comprando</button>
+      <button class="btn btn-primary btn-block" id="confirmCloseBtn">Seguir comprando</button>
     </div>
   </div>
 
@@ -273,26 +244,56 @@
   <!-- FOOTER                       -->
   <!-- ============================ -->
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="assets/logo.png" alt="Logo de EMAIAP" class="footer-logo" />
-        <div>
-          <strong class="footer-wordmark">EMAIAP</strong>
-          <p>Empresa Municipal Agroindustrial Aguada de Pasajeros.</p>
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Columna 1: marca + descripción -->
+        <div class="footer-brand">
+          <img src="assets/logo.png" alt="Logo de EMAIAP" class="footer-logo" />
+          <div>
+            <strong>Agroindustrial<br>Aguada de Pasajeros</strong>
+            <p>Empresa Municipal Agroindustrial Aguada de Pasajeros. Producción agropecuaria, combos alimenticios y servicios técnicos para el municipio.</p>
+          </div>
+        </div>
+
+        <!-- Columna 2: contacto -->
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Calle 2da entre 1ra y 3ra, No. 57, Perseverancia</span>
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>43569143 · 43569137</span>
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+              <span>52098083 · 52117036</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: pagos -->
+        <div class="footer-col">
+          <h4>Pagos por transferencia</h4>
+          <ul class="footer-pagos">
+            <li><strong>CUP:</strong> 1245-4210-9542-0014</li>
+            <li><strong>USD:</strong> 1245-4070-7542-0035</li>
+          </ul>
         </div>
       </div>
-      <div class="footer-meta">
-        <p>&copy; <span id="year"></span> EMAIAP. Todos los derechos reservados.</p>
-        <p>Precios en Moneda Nacional (CUP). Hecho con 💚 y productos fresquitos.</p>
+
+      <!-- Fila final: copyright + botón del equipo desarrollador -->
+      <div class="footer-final">
+        <p>&copy; <span id="year"></span> EMAIAP · Empresa Municipal Agroindustrial Aguada de Pasajeros. Todos los derechos reservados.</p>
+        <a class="btn-equipo" href="https://helsing22.github.io/TwinCodeLandingPage/" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Desarrollado por <strong>TwinCode</strong>
+        </a>
       </div>
     </div>
   </footer>
-
-  <!-- Botón volver arriba -->
-  <button class="back-top" id="backTop" aria-label="Volver arriba" hidden>↑</button>
-
-  <!-- Contenedor de notificaciones tipo "toast" (lo rellena app.js) -->
-  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- ============================ -->
   <!-- SCRIPTS                      -->

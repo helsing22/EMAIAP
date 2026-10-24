@@ -1,5 +1,5 @@
 /* ==========================================================================
-   app.js — Orquestador de la UI (v2 "Editorial Cómica")
+   app.js — Orquestador de la UI
    --------------------------------------------------------------------------
    Responsabilidades:
      - Inicializar la app al cargar el DOM.
@@ -7,13 +7,6 @@
      - Renderizar el contenido del carrito cuando cambia.
      - Gestionar el flujo de checkout y la generación del mensaje de WhatsApp.
      - Mostrar la pantalla de confirmación tras enviar el pedido.
-     - Efectos dinámicos (window.EMAIAP_UI):
-         · toast()          — notificaciones amigables
-         · flyToCart()      — emoji que vuela hasta el botón "Mi pedido"
-         · enhance()        — revelado al hacer scroll de las tarjetas
-         · observeSection() — scrollspy de los chips de categoría
-     - Extras: sombra del header al hacer scroll, botón "volver arriba",
-       animación del badge del carrito.
 
    Depende de:
      - window.Cart   (definido en cart.js)
@@ -30,12 +23,6 @@
      Ejemplo: para +53 55555555 escribe "5355555555".
      ====================================================================== */
   var WHATSAPP_NUMBER = "5355555555";
-
-  /* ---------- Preferencias de movimiento ---------- */
-  var prefersReducedMotion = false;
-  try {
-    prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  } catch (e) { /* navegador antiguo: seguimos con animaciones */ }
 
   /* ---------- Referencias del DOM ---------- */
   var $ = function (id) { return document.getElementById(id); };
@@ -61,120 +48,6 @@
   var confirmOverlay  = $("confirmOverlay");
   var confirmCloseBtn = $("confirmCloseBtn");
 
-  var toastContainer  = $("toastContainer");
-  var backTopBtn      = $("backTop");
-  var siteHeader      = $("siteHeader");
-  var heroOrderBtn    = $("heroOrderBtn");
-
-  /* ======================================================================
-     EFECTOS DINÁMICOS — API usada también por products.js
-     ======================================================================
-     Se define antes de init() para que exista cuando Products.load()
-     renderice el catálogo (los scripts se cargan en orden cart→products→app,
-     pero el render ocurre dentro del DOMContentLoaded de este archivo).
-     ====================================================================== */
-  var EMAIAP_UI = {};
-
-  /* ---------- Toast: notificación flotante amigable ---------- */
-  EMAIAP_UI.toast = function (message) {
-    if (!toastContainer) return;
-    // Máximo 3 toasts simultáneos
-    while (toastContainer.children.length >= 3) {
-      toastContainer.removeChild(toastContainer.firstChild);
-    }
-    var t = document.createElement("div");
-    t.className = "toast";
-    t.textContent = message;
-    toastContainer.appendChild(t);
-    setTimeout(function () {
-      t.classList.add("out");
-      setTimeout(function () {
-        if (t.parentNode) t.parentNode.removeChild(t);
-      }, 320);
-    }, 2100);
-  };
-
-  /* ---------- Emoji volador: del botón "Agregar" al "Mi pedido" ---------- */
-  EMAIAP_UI.flyToCart = function (fromBtn, emoji) {
-    if (!fromBtn || !cartToggleBtn || prefersReducedMotion) return;
-    if (typeof fromBtn.animate !== "function") return; // WAAPI no disponible
-
-    var from = fromBtn.getBoundingClientRect();
-    var to   = cartToggleBtn.getBoundingClientRect();
-
-    var fly = document.createElement("span");
-    fly.className = "fly-emoji";
-    fly.textContent = emoji || "🛒";
-    fly.style.left = (from.left + from.width / 2 - 12) + "px";
-    fly.style.top  = (from.top + from.height / 2 - 12) + "px";
-    document.body.appendChild(fly);
-
-    var dx = (to.left + to.width / 2) - (from.left + from.width / 2);
-    var dy = (to.top + to.height / 2) - (from.top + from.height / 2);
-
-    var anim = fly.animate(
-      [
-        { transform: "translate(0, 0) scale(1)",        opacity: 1 },
-        { transform: "translate(" + dx * 0.6 + "px, " + (dy * 0.6 - 60) + "px) scale(1.15)", opacity: 1, offset: 0.6 },
-        { transform: "translate(" + dx + "px, " + dy + "px) scale(0.4)", opacity: 0.2 }
-      ],
-      { duration: 650, easing: "cubic-bezier(.3,.7,.4,1)" }
-    );
-    anim.onfinish = function () {
-      if (fly.parentNode) fly.parentNode.removeChild(fly);
-    };
-  };
-
-  /* ---------- Revelado al hacer scroll (tarjetas y cabeceras) ---------- */
-  var revealObserver = null;
-  if ("IntersectionObserver" in window && !prefersReducedMotion) {
-    revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
-  }
-
-  /**
-   * Añade animación de entrada a las tarjetas de una sección recién renderizada.
-   * Solo se aplica si el navegador soporta IntersectionObserver; si no,
-   * el contenido simplemente se muestra sin animación.
-   */
-  EMAIAP_UI.enhance = function (section) {
-    if (!section || !revealObserver) return;
-    var cards = section.querySelectorAll(".product-card");
-    Array.prototype.forEach.call(cards, function (card, i) {
-      card.style.setProperty("--reveal-delay", (i % 8) * 55 + "ms");
-      card.classList.add("reveal");
-      revealObserver.observe(card);
-    });
-  };
-
-  /* ---------- Scrollspy: chip activo según la sección visible ---------- */
-  var chipsNav = $("categoryChips");
-  var spyObserver = null;
-  if ("IntersectionObserver" in window && chipsNav) {
-    spyObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        var id = entry.target.id;
-        var chips = chipsNav.querySelectorAll(".chip");
-        Array.prototype.forEach.call(chips, function (chip) {
-          chip.classList.toggle("active", chip.getAttribute("data-target") === id);
-        });
-      });
-    }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
-  }
-
-  EMAIAP_UI.observeSection = function (section) {
-    if (section && spyObserver) spyObserver.observe(section);
-  };
-
-  window.EMAIAP_UI = EMAIAP_UI;
-
   /* ---------- Init ---------- */
   document.addEventListener("DOMContentLoaded", init);
 
@@ -194,52 +67,55 @@
     bindCheckoutUI();
     bindConfirmUI();
     bindEscToClose();
-    bindExtras();
+    bindCopyButtons();
 
     // Render inicial
     renderCart();
   }
 
   /* ======================================================================
-     EXTRAS: sombra del header, volver arriba, botón del hero
+     BOTONES DE COPIAR TARJETAS BANCARIAS (sección Contacto y pagos)
      ====================================================================== */
-  function bindExtras() {
-    var ticking = false;
-
-    window.addEventListener("scroll", function () {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        var y = window.pageYOffset || document.documentElement.scrollTop;
-
-        // Sombra del header
-        if (siteHeader) siteHeader.classList.toggle("scrolled", y > 8);
-
-        // Botón volver arriba
-        if (backTopBtn) backTopBtn.hidden = y <= 600;
-
-        ticking = false;
+  function bindCopyButtons() {
+    var buttons = document.querySelectorAll(".btn-copiar");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var value = btn.getAttribute("data-copy");
+        if (!value) return;
+        copyToClipboard(value);
+        // Feedback visual: cambiar icono a check y volver
+        var originalHTML = btn.innerHTML;
+        btn.classList.add("copiado");
+        btn.innerHTML =
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        setTimeout(function () {
+          btn.classList.remove("copiado");
+          btn.innerHTML = originalHTML;
+        }, 1400);
       });
-    }, { passive: true });
+    });
+  }
 
-    if (backTopBtn) {
-      backTopBtn.addEventListener("click", function () {
-        window.scrollTo({
-          top: 0,
-          behavior: prefersReducedMotion ? "auto" : "smooth"
-        });
+  /** Copia al portapapeles con fallback para navegadores sin navigator.clipboard */
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(function () {
+        legacyCopy(text);
       });
+    } else {
+      legacyCopy(text);
     }
+  }
 
-    // Botón "Hacer pedido" del hero → lleva al catálogo
-    if (heroOrderBtn) {
-      heroOrderBtn.addEventListener("click", function () {
-        var catalog = document.getElementById("catalog");
-        if (catalog) {
-          catalog.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-        }
-      });
-    }
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
   }
 
   /* ======================================================================
@@ -265,29 +141,21 @@
     cartDrawer.classList.remove("is-open");
     cartDrawer.setAttribute("aria-hidden", "true");
     // Esperamos a que termine la transición antes de ocultar el overlay
-    setTimeout(function () { cartOverlay.hidden = true; }, 280);
+    setTimeout(function () { cartOverlay.hidden = true; }, 250);
   }
 
   /* ======================================================================
      RENDER DEL CARRITO
      ====================================================================== */
-  var lastCount = -1;
-
   function renderCart() {
     if (!window.Cart) return;
     var items = Cart.getItems();
     var count = Cart.getCount();
     var total = Cart.getTotal();
 
-    // Contador del icono (con animación "pop" cuando cambia)
+    // Contador del icono
     cartCountEl.textContent = count;
     cartCountEl.setAttribute("data-count", String(count));
-    if (count !== lastCount && count > 0 && lastCount !== -1) {
-      cartCountEl.classList.remove("pop");
-      void cartCountEl.offsetWidth; // reinicia la animación
-      cartCountEl.classList.add("pop");
-    }
-    lastCount = count;
 
     // Total (Money.format añade separador de miles)
     cartTotalEl.textContent = "$" + fmt(total);
@@ -313,7 +181,7 @@
 
     var name = document.createElement("div");
     name.className = "cart-item-name";
-    name.textContent = item.name + (item.unit ? " (" + item.unit + ")" : "");
+    name.textContent = item.name;
 
     var removeBtn = document.createElement("button");
     removeBtn.className = "cart-item-remove";
@@ -426,11 +294,7 @@
   function handleConfirmOrder() {
     var payment = getSelectedPayment();
     if (!payment) {
-      if (window.EMAIAP_UI && window.EMAIAP_UI.toast) {
-        window.EMAIAP_UI.toast("💰 Selecciona un método de pago");
-      } else {
-        alert("Por favor selecciona un método de pago.");
-      }
+      alert("Por favor selecciona un método de pago.");
       return;
     }
 
@@ -511,7 +375,7 @@
 
   function closeModal(overlay) {
     overlay.classList.remove("is-visible");
-    setTimeout(function () { overlay.hidden = true; }, 260);
+    setTimeout(function () { overlay.hidden = true; }, 250);
   }
 
   /* ---------- Cerrar modales con tecla ESC ---------- */
