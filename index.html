@@ -4,12 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Tienda online de EMAIAP — Empresa Municipal Agroindustrial Aguada de Pasajeros. Productos cárnicos, lácteos, dulces, conservas y agropecuarios. Pide por WhatsApp." />
+  <meta name="theme-color" content="#1a3c34" />
   <title>EMAIAP — Tienda Online | Aguada de Pasajeros</title>
 
-  <!-- Tipografía ligera de Google Fonts (opcional, el sitio funciona sin conexión una vez cargada) -->
+  <!-- Tipografía: Fraunces (titulares serif estilo editorial) + Quicksand (cuerpo, redondeada).
+       Opcional: si no hay conexión, el sitio funciona con fuentes del sistema (Georgia/sans). -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,600;1,9..144,700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="stylesheet" href="css/styles.css" />
@@ -17,28 +19,38 @@
 <body>
 
   <!-- ============================ -->
+  <!-- BARRA SUPERIOR               -->
+  <!-- ============================ -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span class="topbar-item">📍 Aguada de Pasajeros · Cienfuegos</span>
+      <span class="topbar-item topbar-item--right">🚚 Pedidos por WhatsApp · Entregas en el municipio</span>
+    </div>
+  </div>
+
+  <!-- ============================ -->
   <!-- CABECERA                     -->
   <!-- ============================ -->
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <div class="container header-inner">
-      <a href="#" class="brand" aria-label="Inicio">
+      <a href="#inicio" class="brand" aria-label="EMAIAP — Inicio">
         <img src="assets/logo.png" alt="Logo de EMAIAP" class="brand-logo" />
-        <span class="brand-name">EMAIAP</span>
+        <span class="brand-text">
+          <span class="brand-name">EMAIAP</span>
+          <span class="brand-sub">Aguada de Pasajeros</span>
+        </span>
       </a>
 
-      <!-- Navegación de categorías (se rellena dinámicamente) -->
-      <nav class="nav-categories" id="navCategories" aria-label="Categorías">
-        <!-- JS inyecta aquí los enlaces de categoría -->
+      <nav class="nav-links" aria-label="Secciones">
+        <a href="#inicio">Inicio</a>
+        <a href="#catalog">Catálogo</a>
       </nav>
 
-      <!-- Botón del carrito -->
-      <button class="cart-toggle" id="cartToggle" aria-label="Abrir carrito">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="9" cy="21" r="1"></circle>
-          <circle cx="20" cy="21" r="1"></circle>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-        </svg>
-        <span class="cart-count" id="cartCount" aria-live="polite">0</span>
+      <!-- Botón del carrito estilo "Mi pedido" -->
+      <button class="cart-toggle" id="cartToggle" aria-label="Abrir mi pedido">
+        <span class="cart-toggle-emoji" aria-hidden="true">🧺</span>
+        <span class="cart-toggle-label">Mi pedido</span>
+        <span class="cart-count" id="cartCount" aria-live="polite" data-count="0">0</span>
       </button>
     </div>
   </header>
@@ -46,24 +58,106 @@
   <!-- ============================ -->
   <!-- CONTENIDO PRINCIPAL          -->
   <!-- ============================ -->
-  <main class="container main-content">
+  <main class="page-main">
 
-    <!-- Hero / intro -->
-    <section class="hero">
-      <h1>Empresa Municipal Agroindustrial Aguada de Pasajeros</h1>
-      <p>Explora nuestra oferta de productos cárnicos, lácteos, dulces, conservas y agropecuarios, añádelos al carrito y finaliza tu pedido por WhatsApp en segundos.</p>
+    <!-- HERO editorial con collage de stickers y sello giratorio -->
+    <section class="hero" id="inicio">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="hero-badge">🌿 Aguada de Pasajeros · Cienfuegos</span>
+          <h1 class="hero-title">
+            Del campo de Aguada
+            <em class="hero-accent">a tu mesa</em>,
+            sin intermediarios.
+          </h1>
+          <p class="hero-text">
+            Cárnicos, lácteos, dulces y productos agropecuarios de la Empresa
+            Municipal Agroindustrial. Añade al carrito y pide en segundos 🎉
+          </p>
+          <div class="hero-actions">
+            <a href="#catalog" class="btn btn-terracotta btn-lg">
+              Ver catálogo <span class="btn-arrow" aria-hidden="true">↓</span>
+            </a>
+            <button type="button" class="btn btn-outline-dark btn-lg" id="heroOrderBtn">
+              📲 Hacer pedido
+            </button>
+          </div>
+        </div>
+
+        <!-- Collage ilustrado (no necesita imágenes externas) -->
+        <div class="hero-art" aria-hidden="true">
+          <span class="sticker st-1">🥩</span>
+          <span class="sticker st-2">🧀</span>
+          <span class="sticker st-3">🍌</span>
+          <span class="sticker st-4">🍗</span>
+          <span class="sticker st-5">🍍</span>
+          <span class="sticker st-6">🥛</span>
+
+          <!-- Sello circular giratorio -->
+          <span class="stamp">
+            <svg viewBox="0 0 120 120" class="stamp-svg">
+              <defs>
+                <path id="stampCircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+              </defs>
+              <text class="stamp-text">
+                <textPath href="#stampCircle" xlink:href="#stampCircle">EMAIAP • CALIDAD SUPERIOR • </textPath>
+              </text>
+              <text x="60" y="72" text-anchor="middle" class="stamp-emoji">🌱</text>
+            </svg>
+          </span>
+        </div>
+      </div>
     </section>
 
-    <!-- Contenedor de categorías y productos (lo rellena products.js) -->
-    <div id="catalog" class="catalog">
-      <!-- Mientras carga mostramos un mensaje -->
-      <p class="loading-msg" id="loadingMsg">Cargando productos…</p>
+    <!-- MARQUESINA infinita -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="marquee-group">
+          <span>🥩 Calidad garantizada</span><i>✦</i>
+          <span>🌱 Producción local</span><i>✦</i>
+          <span>🚚 Pedidos por WhatsApp</span><i>✦</i>
+          <span>💰 Precios en CUP</span><i>✦</i>
+          <span>🌽 Del campo a tu mesa</span><i>✦</i>
+          <span>⭐ Atención al cliente</span><i>✦</i>
+        </span>
+        <span class="marquee-group">
+          <span>🥩 Calidad garantizada</span><i>✦</i>
+          <span>🌱 Producción local</span><i>✦</i>
+          <span>🚚 Pedidos por WhatsApp</span><i>✦</i>
+          <span>💰 Precios en CUP</span><i>✦</i>
+          <span>🌽 Del campo a tu mesa</span><i>✦</i>
+          <span>⭐ Atención al cliente</span><i>✦</i>
+        </span>
+      </div>
     </div>
 
-    <!-- Mensaje de error amigable si ni el JSON ni el respaldo cargan -->
-    <div id="errorBox" class="error-box" hidden>
-      <strong>No pudimos cargar los productos.</strong>
-      <p>Verifica que existan los archivos data/products.json y data/products.js, y vuelve a intentarlo. Si el problema persiste, contacta al administrador del sitio.</p>
+    <div class="container page-content">
+
+      <!-- Encabezado del catálogo -->
+      <div class="catalog-head" id="catalog">
+        <p class="eyebrow"><span class="eyebrow-line"></span> Catálogo</p>
+        <h2 class="catalog-title">De nuestras tierras, <em class="accent">fresquito</em> al punto de venta.</h2>
+        <p class="catalog-sub">74 productos en 5 categorías. Elige, añade al carrito y envía tu pedido por WhatsApp.</p>
+      </div>
+
+      <!-- Chips de categorías (sticky, rellenos por products.js) -->
+      <nav class="chips" id="categoryChips" aria-label="Categorías"></nav>
+
+      <!-- Contenedor de categorías y productos (lo rellena products.js) -->
+      <div id="catalog-list" class="catalog">
+        <p class="loading-msg" id="loadingMsg">
+          <span class="loading-emoji" style="animation-delay:0s">🥩</span>
+          <span class="loading-emoji" style="animation-delay:.15s">🥦</span>
+          <span class="loading-emoji" style="animation-delay:.3s">🧀</span>
+          <span class="loading-text">Cargando productos…</span>
+        </p>
+      </div>
+
+      <!-- Mensaje de error amigable si ni el JSON ni el respaldo cargan -->
+      <div id="errorBox" class="error-box" hidden>
+        <strong>¡Ups! 😅 No pudimos cargar los productos.</strong>
+        <p>Verifica que existan los archivos data/products.json y data/products.js, y vuelve a intentarlo. Si el problema persiste, contacta al administrador del sitio.</p>
+      </div>
     </div>
   </main>
 
@@ -73,13 +167,17 @@
   <div class="cart-overlay" id="cartOverlay" hidden></div>
   <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras" aria-hidden="true">
     <div class="cart-header">
-      <h2>Tu carrito</h2>
+      <h2>🧺 Tu pedido</h2>
       <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">&times;</button>
     </div>
 
     <div class="cart-body" id="cartBody">
       <!-- JS inyecta aquí los items del carrito -->
-      <p class="cart-empty" id="cartEmpty">Tu carrito está vacío.</p>
+      <p class="cart-empty" id="cartEmpty">
+        <span class="cart-empty-emoji">🧺</span>
+        ¡Tu carrito está vacío!
+        <small>Añade algo rico 😋</small>
+      </p>
     </div>
 
     <div class="cart-footer">
@@ -87,7 +185,7 @@
         <span>Total:</span>
         <strong id="cartTotal">$0.00</strong>
       </div>
-      <button class="btn btn-primary btn-block" id="checkoutBtn" disabled>Finalizar compra</button>
+      <button class="btn btn-terracotta btn-block btn-lg" id="checkoutBtn" disabled>⚡ Finalizar compra</button>
     </div>
   </aside>
 
@@ -97,7 +195,7 @@
   <div class="modal-overlay" id="checkoutOverlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
       <div class="modal-header">
-        <h2 id="checkoutTitle">Finalizar compra</h2>
+        <h2 id="checkoutTitle">⚡ Finalizar compra</h2>
         <button class="modal-close" id="checkoutClose" aria-label="Cerrar">&times;</button>
       </div>
 
@@ -110,28 +208,32 @@
         <form id="checkoutForm" class="checkout-form" novalidate>
           <!-- Nombre opcional -->
           <div class="form-group">
-            <label for="customerName">Nombre (opcional)</label>
+            <label for="customerName">👤 Nombre (opcional)</label>
             <input type="text" id="customerName" name="customerName" placeholder="Ej. María Pérez" autocomplete="name" />
           </div>
 
           <!-- Método de pago -->
           <div class="form-group">
-            <span class="form-label">Método de pago</span>
+            <span class="form-label">💰 Método de pago</span>
             <div class="payment-options" id="paymentOptions">
               <label class="payment-option">
                 <input type="radio" name="payment" value="Transfermóvil" required />
+                <span class="pay-emoji">📲</span>
                 <span>Transfermóvil</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="Zelle" />
+                <span class="pay-emoji">💸</span>
                 <span>Zelle</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="PayPal" />
+                <span class="pay-emoji">💳</span>
                 <span>PayPal</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="payment" value="Pago en efectivo" />
+                <span class="pay-emoji">🤝</span>
                 <span>Pago en efectivo</span>
               </label>
             </div>
@@ -145,7 +247,7 @@
 
       <div class="modal-footer">
         <button class="btn btn-ghost" id="checkoutCancel">Cancelar</button>
-        <button class="btn btn-danger" id="confirmOrderBtn">Confirmar y enviar por WhatsApp</button>
+        <button class="btn btn-terracotta" id="confirmOrderBtn">📲 Confirmar y enviar por WhatsApp</button>
       </div>
     </div>
   </div>
@@ -158,12 +260,12 @@
       <div class="confirm-logo">
         <img src="assets/logo.png" alt="Logo de EMAIAP" />
       </div>
-      <h2 id="confirmTitle">¡Pedido enviado!</h2>
+      <h2 id="confirmTitle">🎉 ¡Pedido enviado!</h2>
       <p class="confirm-text">
-        Gracias por tu compra. Te hemos redirigido a WhatsApp con el detalle de tu pedido.
+        ¡Gracias por tu compra! Te hemos redirigido a WhatsApp con el detalle de tu pedido.
         Si WhatsApp no se abrió automáticamente, revisa que no esté bloqueado el enlace.
       </p>
-      <button class="btn btn-primary btn-block" id="confirmCloseBtn">Seguir comprando</button>
+      <button class="btn btn-primary btn-block" id="confirmCloseBtn">😄 Seguir comprando</button>
     </div>
   </div>
 
@@ -175,16 +277,22 @@
       <div class="footer-brand">
         <img src="assets/logo.png" alt="Logo de EMAIAP" class="footer-logo" />
         <div>
-          <strong>EMAIAP</strong>
+          <strong class="footer-wordmark">EMAIAP</strong>
           <p>Empresa Municipal Agroindustrial Aguada de Pasajeros.</p>
         </div>
       </div>
       <div class="footer-meta">
         <p>&copy; <span id="year"></span> EMAIAP. Todos los derechos reservados.</p>
-        <p>Precios en Moneda Nacional (CUP). Hecho con HTML, CSS y JavaScript vanilla.</p>
+        <p>Precios en Moneda Nacional (CUP). Hecho con 💚 y productos fresquitos.</p>
       </div>
     </div>
   </footer>
+
+  <!-- Botón volver arriba -->
+  <button class="back-top" id="backTop" aria-label="Volver arriba" hidden>↑</button>
+
+  <!-- Contenedor de notificaciones tipo "toast" (lo rellena app.js) -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- ============================ -->
   <!-- SCRIPTS                      -->
